@@ -14,7 +14,7 @@ const CreateAPost = () => {
           style={{
             minHeight: "3.5rem",
           }}
-          className="text-gray-700 bg-gray-200 rounded-3xl outline-none px-4 py-1 text-xs w-full"
+          className="text-gray-700 bg-gray-100 rounded-3xl outline-none px-4 py-1 text-xs w-full"
           placeholder="Create a post..."
         />
         <div className="flex justify-between pt-2 h-10 w-full">

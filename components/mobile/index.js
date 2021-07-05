@@ -42,6 +42,7 @@ const MobileLayout = () => {
         </div>
       </div>
       <div className="w-full mt-2 h-auto px-4 flex flex-col">
+        <hr className="bg-black w-full my-4 border-t border-gray-300 " />
         <CreateAPost />
         <hr className="bg-black w-full my-4 mb-2 border-t border-gray-300 " />
         <div className="font-light text-center mb-2">Latest Posts</div>

@@ -1,8 +1,9 @@
 import CreateAPost from "./createAPost";
 import Post from "../Post";
+import OnlineCard from "../onlineCard.js";
 const DesktopLayout = () => {
   return (
-    <div className="py-2 flex h-screen w-screen">
+    <div className="flex py-2 h-screen w-screen">
       <div className="border-r border-gray-300 p-4 flex flex-col justify-center items-center w-1/4 h-full overflow-y-auto">
         <div className="flex flex-col justify-center items-center">
           <div className="w-60 h-60 rounded-full shadow-md bg-white"></div>
@@ -54,12 +55,16 @@ const DesktopLayout = () => {
           style={{
             minHeight: "40rem",
           }}
-          className="shadow-sm rounded-md px-2 w-full h-full bg-white"
+          className="shadow-sm rounded-md px-2 w-full h-5/6 bg-white"
         >
           <div className="px-2 py-2 text-md text-gray-500 font-semibold">
             Online Members
           </div>
           <hr className="bg-black" />
+          <OnlineCard />
+          <OnlineCard />
+          <OnlineCard />
+          <OnlineCard />
         </div>
         <div className="text-xs font-light text-gray-500 my-1">
           Copyright ©️ The Coterie Crux, 2021
