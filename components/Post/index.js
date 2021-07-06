@@ -46,13 +46,13 @@ const Post = () => {
           style={{
             backgroundRepeat: "no-repeat",
             backgroundSize: "100% 100%",
-            height: dimensions.height / 6,
-            width: dimensions.width / 6,
+            height: dimensions.height / 2,
+            width: dimensions.width / 2,
             display: "block",
             marginLeft: "auto",
             marginRight: "auto",
           }}
-          src="/Screenshot 2021-06-28 at 11.41.23 PM.png"
+          src="/profile.jpeg"
         />
       </div>
       <hr className="bg-black" />
