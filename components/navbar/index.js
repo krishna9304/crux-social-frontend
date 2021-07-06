@@ -1,7 +1,9 @@
+import { useState } from "react";
 import CollegeLogo from "./CollegeLogo";
 import NavProfileIcon from "./NavProfileIcon";
 
 const NavBar = ({ className }) => {
+  let [open, setOpen] = useState(false);
   return (
     <nav
       className={
@@ -10,6 +12,23 @@ const NavBar = ({ className }) => {
     >
       <CollegeLogo name="iter" />
       <div className="w-full flex items-center justify-end m-3">
+        {open ? (
+          <input
+            className="justify-items-center lg:hidden xl:hidden 2xl:hidden md:hidden font-light text-sm bg-gray-600 text-white w-48 h-8 outline-none rounded-3xl px-4"
+            placeholder="search"
+          />
+        ) : null}
+        <div
+          onClick={(e) => {
+            setOpen(!open);
+            e.preventDefault();
+          }}
+        >
+          <img
+            className="hover:cursor-pointer w-6 mx-4 md:hidden lg:hidden xl:hidden 2xl:hidden"
+            src="/search-13-128.png"
+          />
+        </div>
         <div className={"hidden md:block lg:block xl:block"}>
           <div className="flex items-center">
             <div className="pr-6">
