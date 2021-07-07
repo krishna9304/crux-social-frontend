@@ -1,22 +1,43 @@
 import CreateAPost from "./createAPost";
 import Post from "../Post";
 import OnlineCard from "../onlineCard.js";
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 const DesktopLayout = () => {
+  let globalState = useSelector((state) => state);
+  const [onlineUsers, setOnlineUsers] = useState([]);
+  useEffect(() => {
+    if (globalState.socket) {
+      globalState.socket.emit("GET_ONLINE_USERS", globalState.user._id);
+      globalState.socket.on("ONLINE_USERS", (user) => {
+        setOnlineUsers(user);
+      });
+    }
+  }, []);
   return (
     <div className="flex py-2 h-screen w-screen">
       <div className="border-r border-gray-300 p-4 flex flex-col justify-center items-center w-1/4 h-full overflow-y-auto">
         <div className="flex flex-col justify-center items-center">
-          <div className="w-60 h-60 rounded-full shadow-md bg-white"></div>
-          <div className="mt-2 font-semibold text-2xl">Krishna Mahato</div>
+          <div
+            style={{
+              background: `url(${globalState.user.profilepPic})`,
+              backgroundRepeat: "no-repeat",
+              backgroundSize: "100% 100%",
+            }}
+            className="w-60 h-60 rounded-full shadow-md"
+          ></div>
+          <div className="mt-2 font-semibold text-2xl">
+            {globalState.user.name}
+          </div>
           <div className="text-xs font-light">
-            1st Year, 2041013021, Section-2041005
+            Year-{globalState.user.year}, {globalState.user.regdNo}, Section-
+            {globalState.user.section}
           </div>
           <div className="px-2 py-1 mt-4 hover:text-pink-900 hover:cursor-pointer rounded-3xl text-blue-900 font-medium border border-gray-400 text-sm">
             🎓 Computer Science Engineering
           </div>
           <div className="mt-4 flex items-center justify-center text-center font-light text-gray-500 text-sm">
-            Hey there everyone! Nice to meet you beautiful people. Do check my
-            social links below.
+            {globalState.user.bio}
           </div>
           <div className="flex mt-4 w-full justify-between px-4">
             <img
@@ -46,9 +67,6 @@ const DesktopLayout = () => {
         <CreateAPost />
         <hr className="bg-black w-full my-6 border-t border-gray-300 " />
         <Post />
-        <Post />
-        <Post />
-        <Post />
       </div>
       <div className="w-1/4 border-l border-gray-300 p-4 h-full">
         <div
@@ -61,10 +79,18 @@ const DesktopLayout = () => {
             Online Members
           </div>
           <hr className="bg-black" />
-          <OnlineCard />
-          <OnlineCard />
-          <OnlineCard />
-          <OnlineCard />
+          {onlineUsers.map((item, index) => {
+            if (item._id !== globalState.user._id) {
+              return (
+                <OnlineCard
+                  key={index}
+                  id={item._id}
+                  profilePic={item.profilepPic}
+                  name={item.name}
+                />
+              );
+            }
+          })}
         </div>
         <div className="text-xs font-light text-gray-500 my-1">
           Copyright ©️ The Coterie Crux, 2021

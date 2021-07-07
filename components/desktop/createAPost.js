@@ -1,4 +1,7 @@
+import { useSelector } from "react-redux";
+
 const CreateAPost = () => {
+  let globalState = useSelector((state) => state);
   return (
     <div
       style={{
@@ -7,7 +10,14 @@ const CreateAPost = () => {
       className="flex bg-white w-full p-2 px-2 rounded-md shadow-sm"
     >
       <div className="w-1/12">
-        <div className="w-10 lg:w-8 lg:h-8 rounded-full h-10 bg-gray-700"></div>
+        <div
+          style={{
+            background: `url(${globalState.user.profilepPic})`,
+            backgroundRepeat: "no-repeat",
+            backgroundSize: "100% 100%",
+          }}
+          className="w-10 lg:w-8 lg:h-8 rounded-full h-10 bg-gray-700"
+        ></div>
       </div>
       <div className="w-11/12 pl-4 xl:px-0 lg:px-0 md:px-0">
         <textarea

@@ -3,10 +3,9 @@ import NavBar from "../components/navbar";
 import { useRouter } from "next/router";
 import { useSelector } from "react-redux";
 
-let Layout = ({ children, classname = "" }) => {
+let MessengerLayoutMobile = ({ children, classname = "" }) => {
   let router = useRouter();
   let globalState = useSelector((state) => state);
-
   return (
     <div
       className={
@@ -21,45 +20,31 @@ let Layout = ({ children, classname = "" }) => {
       <div className="flex h-10">
         <div
           onClick={() => {
-            router.push("/classmates");
+            router.push("/inbox");
           }}
-          className="w-1/3 h-10"
+          className="w-1/2 h-10"
         >
           <div className="hover:cursor-pointer flex bg-white flex-col justify-end w-full h-full">
             <div className="font-light text-sm w-full h-full flex justify-center items-center">
-              Classmates
+              Inbox
             </div>
-            {router.pathname === "/classmates" ? (
+            {router.pathname === "/inbox" ? (
               <div className="h-1.5 bg-gray-900 rounded-t-md"></div>
             ) : null}
           </div>
         </div>
+
         <div
           onClick={() => {
-            router.push("/dashboard");
+            router.push("/online-members");
           }}
-          className="w-1/3 h-10"
+          className="w-1/2 h-10"
         >
           <div className="hover:cursor-pointer flex bg-white flex-col justify-end w-full h-full">
             <div className="font-light text-sm w-full h-full flex justify-center items-center">
-              Home
+              Online
             </div>
-            {router.pathname === "/dashboard" ? (
-              <div className="h-1.5 bg-gray-900 rounded-t-md"></div>
-            ) : null}
-          </div>
-        </div>
-        <div
-          onClick={() => {
-            router.push("/clubs");
-          }}
-          className="w-1/3 h-10"
-        >
-          <div className="hover:cursor-pointer flex bg-white flex-col justify-end w-full h-full">
-            <div className="font-light text-sm w-full h-full flex justify-center items-center">
-              Clubs
-            </div>
-            {router.pathname === "/clubs" ? (
+            {router.pathname === "/online-members" ? (
               <div className="h-1.5 bg-gray-900 rounded-t-md"></div>
             ) : null}
           </div>
@@ -72,4 +57,4 @@ let Layout = ({ children, classname = "" }) => {
   );
 };
 
-export default Layout;
+export default MessengerLayoutMobile;

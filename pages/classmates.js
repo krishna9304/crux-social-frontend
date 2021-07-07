@@ -1,9 +1,10 @@
 import Layout from "../components/layout";
 import ClassmateProfile from "../components/classmate";
 import demoapi from "../demoApi.json";
-import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 
 export default function Classmate() {
+  let globalState = useSelector((state) => state);
   return (
     <Layout classname="fixed w-screen h-screen">
       <div className="flex flex-col justify-center items-center w-full h-full">
@@ -12,8 +13,8 @@ export default function Classmate() {
           placeholder="Search for classmates..."
         />
         <div className="flex overflow-y-auto flex-wrap p-2 w-5/6 pb-28 h-full">
-          {demoapi.map((item, i) => {
-            return <ClassmateProfile key={i} />;
+          {globalState.classmates.map((item, i) => {
+            return <ClassmateProfile key={i} classmate={item} />;
           })}
         </div>
       </div>

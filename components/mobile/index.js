@@ -1,21 +1,32 @@
 import Post from "../Post";
 import CreateAPost from "../desktop/createAPost";
+import { useSelector } from "react-redux";
 const MobileLayout = () => {
+  let globalState = useSelector((state) => state);
   return (
     <div className="py-4 flex flex-col items-center justify-center h-full w-screen overflow-y-auto">
       <div className="w-full h-full flex items-center justify-center">
         <div className="p-4 flex flex-col justify-center items-center w-full max-w-sm h-full">
-          <div className="w-60 h-60 rounded-full shadow-md bg-white"></div>
-          <div className="mt-2 font-semibold text-2xl">Krishna Mahato</div>
+          <div
+            style={{
+              background: `url(${globalState.user.profilepPic})`,
+              backgroundRepeat: "no-repeat",
+              backgroundSize: "100% 100%",
+            }}
+            className="w-60 h-60 rounded-full shadow-md bg-white"
+          ></div>
+          <div className="mt-2 font-semibold text-2xl">
+            {globalState.user.name}
+          </div>
           <div className="text-xs font-light">
-            1st Year, 2041013021, Section-2041005
+            Year-{globalState.user.year}, {globalState.user.regdNo}, Section-
+            {globalState.user.section}
           </div>
           <div className="px-2 py-1 mt-4 hover:text-pink-900 hover:cursor-pointer rounded-3xl text-blue-900 font-medium border border-gray-400 text-sm">
             🎓 Computer Science Engineering
           </div>
           <div className="mt-4 flex items-center justify-center text-center font-light text-gray-500 text-sm">
-            Hey there everyone! Nice to meet you beautiful people. Do check my
-            social links below.
+            {globalState.user.bio}
           </div>
           <div className="flex mt-4 w-full justify-between px-4">
             <img

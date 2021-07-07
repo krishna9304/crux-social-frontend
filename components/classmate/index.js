@@ -1,6 +1,6 @@
 import { useState } from "react";
 import ClassmateProfileModal from "./classmateProfileModal";
-const ClassmateProfile = () => {
+const ClassmateProfile = ({ classmate }) => {
   const [isopen, setOpen] = useState(false);
   return (
     <>
@@ -8,16 +8,26 @@ const ClassmateProfile = () => {
         onClick={() => {
           setOpen(!isopen);
         }}
-        className="2xl:w-1/4 xl:w-1/4 lg:w-1/3 p-2 md:w-1/2 sm:w-1/2 w-full  h-56"
+        className="2xl:w-1/4 xl:w-1/4 lg:w-1/3 p-2 md:w-1/2 sm:w-1/2 w-full h-56"
       >
-        <div className="flex justify-center items-center bg-gray-500 w-full rounded-md h-full p-0">
-          <div className="h-24 w-24 shadow-lg rounded-full bg-white"></div>
+        <div className="flex flex-col hover:cursor-pointer justify-center items-center bg-gray-500 w-full rounded-t-md h-5/6">
+          <div
+            style={{
+              background: `url(${classmate.profilepPic})`,
+              backgroundRepeat: "no-repeat",
+              backgroundSize: "100% 100%",
+            }}
+            className="h-24 w-24 shadow-lg rounded-full bg-white"
+          ></div>
+        </div>
+        <div className="bg-black text-white flex items-center px-4 text-sm h-1/6 rounded-b-md w-full">
+          {classmate.name}
         </div>
       </div>
       {isopen ? (
         <>
           {" "}
-          <ClassmateProfileModal />{" "}
+          <ClassmateProfileModal classmate={classmate} />{" "}
           <div
             onClick={() => {
               setOpen(false);

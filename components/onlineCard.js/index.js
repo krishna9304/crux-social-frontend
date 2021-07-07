@@ -1,27 +1,64 @@
-import { useState } from "react";
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import Message from "../message";
+import { useMediaQuery } from "../../utilities/mediaQuery";
+import ChatBox from "../chatBox";
+import { useRouter } from "next/router";
 
-const OnlineCard = () => {
+const OnlineCard = ({ profilePic, name, id }) => {
   const [open, setOpen] = useState(false);
+  const [msg, setMsg] = useState("");
+  const [chats, setChats] = useState([]);
+  let globalState = useSelector((state) => state);
+  let isPageWide = useMediaQuery("(min-width: 900px)");
+  let router = useRouter();
+
+  useEffect(() => {
+    const ac = new AbortController();
+    globalState.socket.on("NEW_MSG", (data) => {
+      setChats((msgs) => [...msgs, data]);
+    });
+    return () => ac.abort();
+  }, []);
   return (
     <>
       <div
         onClick={() => {
           open ? setOpen(false) : setOpen(true);
+          axios
+            .post("http://localhost:8080/api/v1/chats/getChats", {
+              to: id,
+              id: globalState.user._id,
+            })
+            .then((res) => {
+              setChats(res.data.chats);
+            });
         }}
-        className="flex hover:cursor-pointer hover:bg-gray-100 rounded-lg p-1 w-full my-2"
+        className="flex hover:cursor-pointer hover:bg-gray-200 rounded-lg p-1 w-full my-2"
       >
         <div className="flex items-center justify-center w-1/6 h-10">
-          <div className="w-10 h-10 bg-gray-600 rounded-full"></div>
+          <div
+            style={{
+              background: `url(${profilePic})`,
+              backgroundRepeat: "no-repeat",
+              backgroundSize: "100% 100%",
+            }}
+            className="w-8 h-8 bg-gray-600 rounded-full"
+          ></div>
         </div>
-        <div className="w-2/3 h-10 text-sm font-light flex items-center px-4">
-          Krishna Mahato
+        <div className="w-2/3 h-10 text-xs font-light flex items-center px-4">
+          {name}
         </div>
         <div className="flex justify-center items-center w-1/6 h-10">
           <div className="w-2.5 h-2.5 bg-green-600 rounded-full"></div>
         </div>
       </div>
-      {open ? (
-        <div className="bg-gray-100 border bottom-0 right-60 fixed w-80 h-1/2 rounded-lg">
+      {open &&
+      isPageWide &&
+      router.pathname !== "/inbox" &&
+      router.pathname !== "/online-members" ? (
+        <div className="bg-gray-100 border shadow-lg bottom-0 right-60 fixed w-80 h-1/2 rounded-lg">
           <div
             onClick={() => {
               setOpen(false);
@@ -38,27 +75,96 @@ const OnlineCard = () => {
                   marginRight: "auto",
                 }}
                 className="border border-gray-900 h-8 w-8 rounded-full"
-                src="/profile.jpeg"
+                src={profilePic}
               />
             </div>
             <div className="text-xs flex items-center font-light px-2">
-              Krishna Mahato
+              {name}
             </div>
           </div>
           <hr className="bg-black" />
           <div className="flex flex-col w-full h-full">
-            <div className="w-full h-full p-1"></div>
+            <div className="w-full overflow-y-auto h-full pr-2">
+              {chats.map((item, key) => {
+                return (
+                  <Message
+                    key={key}
+                    msgVal={item.msg}
+                    me={item.sentFrom === globalState.user._id}
+                    profilePic={profilePic}
+                  />
+                );
+              })}
+            </div>
             <div className="flex px-2 w-full h-10 mb-11">
               <input
+                onChange={(e) => {
+                  setMsg(e.target.value);
+                }}
+                value={msg}
                 className="bg-white w-5/6 rounded-full outline-none text-sm shadow-md font-light h-10 px-2"
                 placeholder="Write a message..."
               />
-              <button className="flex-grow ml-2 bg-gray-900 text-white rounded-full">
+              <button
+                onClick={() => {
+                  axios
+                    .post("http://localhost:8080/api/v1/chats/addChat", {
+                      to: id,
+                      from: globalState.user._id,
+                      msg: msg,
+                    })
+                    .then((res) => {
+                      if (res.data.res) {
+                        globalState.socket.emit("NEW_MSG", {
+                          msg,
+                          sentTo: id,
+                          sentFrom: globalState.user._id,
+                        });
+                      }
+                    })
+                    .catch(console.log);
+                  setMsg("");
+                }}
+                className="flex-grow ml-2 bg-gray-900 text-white rounded-full"
+              >
                 ►
               </button>
             </div>
           </div>
         </div>
+      ) : null}
+      {open && !isPageWide ? (
+        <>
+          <ChatBox
+            className="fixed top-0 left-0 h-screen w-screen"
+            id={id}
+            name={name}
+            profilePic={profilePic}
+          />{" "}
+          <div
+            onClick={() => {
+              setOpen(false);
+            }}
+            className="hover:cursor-pointer hover:bg-gray-200 rounded-full p-1 fixed top-0 right-0 w-6 h-6 m-2"
+          >
+            <img className="w-full h-full invert " src="/x-mark-128.png" />
+          </div>{" "}
+        </>
+      ) : null}
+      {open &&
+      isPageWide &&
+      (router.pathname === "/inbox" ||
+        router.pathname === "/online-members") ? (
+        <>
+          <div className="bg-white fixed w-1/2 h-11/12 top-14 bottom-0 left-1/4">
+            <ChatBox
+              className="h-full w-full"
+              id={id}
+              name={name}
+              profilePic={profilePic}
+            />
+          </div>
+        </>
       ) : null}
     </>
   );

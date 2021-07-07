@@ -1,13 +1,45 @@
 import { useState } from "react";
-import Link from "next/link";
+import { useDispatch, useSelector } from "react-redux";
+import { useRouter } from "next/router";
+import {
+  setAuth,
+  setClassmates,
+  setCollege,
+  setSocket,
+  setUser,
+} from "../../../redux/actions/actions";
 
 const NavProfileIcon = () => {
+  let globalState = useSelector((state) => state);
+  let dispatch = useDispatch();
+  let router = useRouter();
+  let logOut = () => {
+    var cookies = document.cookie.split(";");
+
+    for (var i = 0; i < cookies.length; i++) {
+      var cookie = cookies[i];
+      var eqPos = cookie.indexOf("=");
+      var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+      document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
+    }
+    dispatch(setAuth(false));
+    dispatch(setUser(null));
+    dispatch(setClassmates([]));
+    dispatch(setSocket(null));
+    dispatch(setCollege(""));
+    router.push("/");
+  };
   const [open, setOpen] = useState(false);
   return (
     <>
       <div
         onClick={() => {
           setOpen(open ? false : true);
+        }}
+        style={{
+          background: `url(${globalState.user.profilepPic})`,
+          backgroundRepeat: "no-repeat",
+          backgroundSize: "100% 100%",
         }}
         className="bg-white rounded-full w-10 h-10"
       ></div>
@@ -24,7 +56,12 @@ const NavProfileIcon = () => {
           <div className="w-full hover:cursor-pointer hover:font-bold hover:text-gray-900 px-4 py-2 text-xs font-light">
             Edit Profile
           </div>
-          <div className="w-full px-4 pb-2 text-xs font-light hover:cursor-pointer hover:font-bold hover:text-gray-900  ">
+          <div
+            onClick={() => {
+              router.push("/inbox");
+            }}
+            className="w-full px-4 pb-2 text-xs font-light hover:cursor-pointer hover:font-bold hover:text-gray-900  "
+          >
             Messages
           </div>
         </div>
@@ -36,7 +73,12 @@ const NavProfileIcon = () => {
           <div className="w-full hover:cursor-pointer hover:font-bold hover:text-gray-900 px-4 py-2 text-xs font-light">
             Help
           </div>
-          <div className="w-full px-4 pb-2 text-xs hover:cursor-pointer font-bold text-red-700 ">
+          <div
+            onClick={() => {
+              logOut();
+            }}
+            className="w-full px-4 pb-2 text-xs hover:cursor-pointer font-bold text-red-700 "
+          >
             Log Out
           </div>
         </div>
