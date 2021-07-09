@@ -18,7 +18,7 @@ const ChatBox = ({ id, profilePic, name, className }) => {
     <div
       onLoad={() => {
         axios
-          .post("http://localhost:8080/api/v1/chats/getChats", {
+          .post(`${process.env.BACKEND_URL}/api/v1/chats/getChats`, {
             to: id,
             id: globalState.user._id,
           })
@@ -63,7 +63,7 @@ const ChatBox = ({ id, profilePic, name, className }) => {
             onKeyUp={(e) => {
               if (e.key === "Enter") {
                 axios
-                  .post("http://localhost:8080/api/v1/chats/addChat", {
+                  .post(`${process.env.BACKEND_URL}/api/v1/chats/addChat`, {
                     to: id,
                     from: globalState.user._id,
                     msg: msg,
@@ -91,7 +91,7 @@ const ChatBox = ({ id, profilePic, name, className }) => {
           <button
             onClick={() => {
               axios
-                .post("http://localhost:8080/api/v1/chats/addChat", {
+                .post(`${process.env.BACKEND_URL}/api/v1/chats/addChat`, {
                   to: id,
                   from: globalState.user._id,
                   msg: msg,

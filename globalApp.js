@@ -34,7 +34,7 @@ const GlobalApp = ({ Component, pageProps }) => {
 
       if (token !== undefined || token !== null || token !== "") {
         axios
-          .post("http://localhost:8080/api/v1/auth/verifyToken", {
+          .post(`${process.env.BACKEND_URL}/api/v1/auth/verifyToken`, {
             token: token,
           })
           .then((res) => {
@@ -46,7 +46,7 @@ const GlobalApp = ({ Component, pageProps }) => {
                   payload: res.data.userdata,
                 });
                 dispatch(setCollege(res.data.college));
-                let socket = io("http://localhost:8080", {
+                let socket = io(`${process.env.BACKEND_URL}`, {
                   transports: ["websocket"],
                 });
                 dispatch(setSocket(socket));
@@ -54,7 +54,7 @@ const GlobalApp = ({ Component, pageProps }) => {
                 console.log("token verified");
                 axios
                   .post(
-                    "http://localhost:8080/api/v1/classmates/getClassmates",
+                    `${process.env.BACKEND_URL}/api/v1/classmates/getClassmates`,
                     res.data.userdata
                   )
                   .then((classRes) => {

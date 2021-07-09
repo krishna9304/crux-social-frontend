@@ -211,14 +211,14 @@ export default function Home() {
                   onClick={() => {
                     axios
                       .post(
-                        "http://localhost:8080/api/v1/auth/login",
+                        `${process.env.BACKEND_URL}/api/v1/auth/login`,
                         loginData
                       )
                       .then((res) => {
                         if (res.data.res) {
                           document.cookie = "jwt=" + res.data.jwt;
                           dispatch(setUser(res.data.userdata));
-                          let socket = io("http://localhost:8080", {
+                          let socket = io(`${process.env.BACKEND_URL}`, {
                             transports: ["websocket"],
                           });
                           dispatch(setSocket(socket));
@@ -227,7 +227,7 @@ export default function Home() {
                           socket.emit("USER_ID", res.data.userdata._id);
                           axios
                             .post(
-                              "http://localhost:8080/api/v1/classmates/getClassmates",
+                              `${process.env.BACKEND_URL}/api/v1/classmates/getClassmate`,
                               res.data.userdata
                             )
                             .then((classRes) => {

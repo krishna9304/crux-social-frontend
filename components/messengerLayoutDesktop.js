@@ -12,14 +12,14 @@ let MessengerLayoutDesktop = ({ classname = "" }) => {
   const [onlineUsers, setOnlineUsers] = useState([]);
   useEffect(() => {
     axios
-      .post("http://localhost:8080/api/v1/inbox/getInbox", {
+      .post(`${process.env.BACKEND_URL}/api/v1/inbox/getInbox`, {
         id: globalState.user._id,
       })
       .then((res) => {
         let users = res.data.users;
         for (let student of users) {
           axios
-            .post("http://localhost:8080/api/v1/student/getStudent", {
+            .post(`${process.env.BACKEND_URL}/api/v1/student/getStudent`, {
               studentID: student,
             })
             .then((res) => {

@@ -27,7 +27,7 @@ const OnlineCard = ({ profilePic, name, id }) => {
         onClick={() => {
           open ? setOpen(false) : setOpen(true);
           axios
-            .post("http://localhost:8080/api/v1/chats/getChats", {
+            .post(`${process.env.BACKEND_URL}/api/v1/chats/getChats`, {
               to: id,
               id: globalState.user._id,
             })
@@ -108,7 +108,7 @@ const OnlineCard = ({ profilePic, name, id }) => {
               <button
                 onClick={() => {
                   axios
-                    .post("http://localhost:8080/api/v1/chats/addChat", {
+                    .post(`${process.env.BACKEND_URL}/api/v1/chats/addChat`, {
                       to: id,
                       from: globalState.user._id,
                       msg: msg,

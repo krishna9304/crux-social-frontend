@@ -84,10 +84,13 @@ const ClassmateProfileModal = ({ classmate }) => {
                     onClick={() => {
                       open ? setOpen(false) : setOpen(true);
                       axios
-                        .post("http://localhost:8080/api/v1/chats/getChats", {
-                          to: classmate._id,
-                          id: globalState.user._id,
-                        })
+                        .post(
+                          `${process.env.BACKEND_URL}/api/v1/chats/getChats`,
+                          {
+                            to: classmate._id,
+                            id: globalState.user._id,
+                          }
+                        )
                         .then((res) => {
                           setChats(res.data.chats);
                         });
@@ -165,7 +168,7 @@ const ClassmateProfileModal = ({ classmate }) => {
               <button
                 onClick={() => {
                   axios
-                    .post("http://localhost:8080/api/v1/chats/addChat", {
+                    .post(`${process.env.BACKEND_URL}/api/v1/chats/addChat`, {
                       to: classmate._id,
                       from: globalState.user._id,
                       msg: msg,

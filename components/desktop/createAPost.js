@@ -28,7 +28,7 @@ const CreateAPost = () => {
         },
       };
       let res = await axios.post(
-        "http://localhost:8080/api/v1/post/createPost",
+        `${process.env.BACKEND_URL}/api/v1/post/createPost`,
         formData,
         config
       );
