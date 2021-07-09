@@ -1,7 +1,53 @@
+import axios from "axios";
+import { useState } from "react";
 import { useSelector } from "react-redux";
 
 const CreateAPost = () => {
   let globalState = useSelector((state) => state);
+  let [err, setErr] = useState({});
+  const [post, setNewPost] = useState({
+    picture: null,
+    caption: null,
+    postedBy: null,
+  });
+  const [chosen, setChosen] = useState(false);
+  let createNewPost = async () => {
+    setNewPost({
+      ...post,
+      postedBy: globalState.user._id,
+    });
+    if (post.postedBy && (post.picture || post.caption)) {
+      const formData = new FormData();
+      formData.append("picture", post.picture);
+      formData.append("caption", post.caption);
+      formData.append("postedBy", globalState.user._id);
+      console.log(post.picture);
+      const config = {
+        headers: {
+          "content-type": "multipart/form-data",
+        },
+      };
+      let res = await axios.post(
+        "http://localhost:8080/api/v1/post/createPost",
+        formData,
+        config
+      );
+      console.log(res);
+      if (res.data.res) {
+      } else {
+        setErr({
+          show: true,
+          msg: "",
+        });
+      }
+    } else {
+      setErr({
+        show: true,
+        msg: "Please fill all the details and try again",
+      });
+      console.log(err);
+    }
+  };
   return (
     <div
       style={{
@@ -21,6 +67,12 @@ const CreateAPost = () => {
       </div>
       <div className="w-11/12 pl-4 xl:px-0 lg:px-0 md:px-0">
         <textarea
+          onChange={(e) => {
+            setNewPost({
+              ...post,
+              caption: e.target.value,
+            });
+          }}
           style={{
             minHeight: "3.5rem",
           }}
@@ -28,15 +80,49 @@ const CreateAPost = () => {
           placeholder="Create a post..."
         />
         <div className="flex justify-between pt-2 h-10 w-full">
-          <div
-            style={{
-              minWidth: "8rem",
-            }}
-            className="hover:cursor-pointer hover:text-gray-800 text-gray-500 hover:bg-gray-100 w-1/4 text-xs font-medium flex justify-center items-center border border-gray-200 rounded-md"
+          <label
+            className={
+              "flex justify-around items-center px-2 text-blue rounded-lg shadow-sm uppercase border border-gray-900 cursor-pointer hover:bg-gray-900 hover:text-white " +
+              (chosen ? "bg-gray-900 text-white" : "")
+            }
           >
-            🏞 Image / 🎬 Video
-          </div>
-          <div className="hover:cursor-pointer hover:bg-gray-800 active:bg-black bg-gray-900 text-white w-1/6 text-sm font-medium flex justify-center items-center border border-gray-200 rounded-md">
+            <svg
+              className="w-6 h-6 mr-2"
+              fill="currentColor"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 20 20"
+            >
+              <path d="M16.88 9.1A4 4 0 0 1 16 17H5a5 5 0 0 1-1-9.9V7a3 3 0 0 1 4.52-2.59A4.98 4.98 0 0 1 17 8c0 .38-.04.74-.12 1.1zM11 11h3l-4-4-4 4h3v3h2v-3z" />
+            </svg>
+            <span
+              style={{
+                fontSize: "0.6rem",
+              }}
+            >
+              {chosen ? "Selected! " : "Select a file"}
+            </span>
+            <input
+              accept="image/*"
+              onChange={(e) => {
+                setChosen(true);
+                setNewPost({
+                  ...post,
+                  picture: e.target.files[0],
+                });
+                console.log(post);
+              }}
+              name="image"
+              type="file"
+              className="hidden"
+            />
+          </label>
+
+          <div
+            onClick={() => {
+              createNewPost();
+            }}
+            className="hover:cursor-pointer hover:bg-gray-800 active:bg-black bg-gray-900 text-white w-1/6 text-sm font-medium flex justify-center items-center border border-gray-200 rounded-md"
+          >
             Post
           </div>
         </div>

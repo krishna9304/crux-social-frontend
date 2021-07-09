@@ -216,6 +216,7 @@ export default function Home() {
                       )
                       .then((res) => {
                         if (res.data.res) {
+                          document.cookie = "jwt=" + res.data.jwt;
                           dispatch(setUser(res.data.userdata));
                           let socket = io("http://localhost:8080", {
                             transports: ["websocket"],
@@ -224,7 +225,6 @@ export default function Home() {
                           dispatch(setAuth(true));
                           dispatch(setCollege(res.data.college));
                           socket.emit("USER_ID", res.data.userdata._id);
-                          document.cookie = "jwt=" + res.data.jwt;
                           axios
                             .post(
                               "http://localhost:8080/api/v1/classmates/getClassmates",

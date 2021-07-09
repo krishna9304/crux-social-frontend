@@ -3,11 +3,34 @@ import NavBar from "../components/navbar";
 import { useSelector } from "react-redux";
 import OnlineCard from "./onlineCard.js";
 import { useEffect, useState } from "react";
+import MessageCard from "./messagecard";
+import axios from "axios";
 
 let MessengerLayoutDesktop = ({ classname = "" }) => {
   let globalState = useSelector((state) => state);
+  let [convos, setConvos] = useState([]);
   const [onlineUsers, setOnlineUsers] = useState([]);
   useEffect(() => {
+    axios
+      .post("http://localhost:8080/api/v1/inbox/getInbox", {
+        id: globalState.user._id,
+      })
+      .then((res) => {
+        let users = res.data.users;
+        for (let student of users) {
+          axios
+            .post("http://localhost:8080/api/v1/student/getStudent", {
+              studentID: student,
+            })
+            .then((res) => {
+              let user = res.data.student;
+              setConvos((con) => [...con, user]);
+            })
+            .catch(console.error);
+        }
+      })
+      .catch(console.error);
+
     if (globalState.socket) {
       globalState.socket.emit("GET_ONLINE_USERS", globalState.user._id);
       globalState.socket.on("ONLINE_USERS", (user) => {
@@ -29,9 +52,31 @@ let MessengerLayoutDesktop = ({ classname = "" }) => {
       </Head>
       <NavBar />
       <div className="flex w-screen h-full">
-        <div className="bg-gray-200 h-full w-1/4"></div>
-        <div className="bg-gray-200 h-full w-1/2"></div>
-        <div className="bg-gray-200 p-2 pt-4 h-full w-1/4">
+        <div className="bg-gray-200 h-full pt-0 w-1/4">
+          <div className="bg-gray-100 pr-2 overflow-y-auto w-full h-full">
+            <div className="bg-gray-700 w-full h-10 flex items-center justify-center text-sm font-semibold text-white ">
+              <img className="w-6 invert mx-2" src="/icons8-send-100.png" />{" "}
+              Inbox
+            </div>
+            {convos.map((item, i) => {
+              return (
+                <MessageCard
+                  id={item._id}
+                  name={item.name}
+                  profilePic={item.profilepPic}
+                  key={i}
+                />
+              );
+            })}
+          </div>
+        </div>
+        <div className="bg-gray-200 flex flex-col justify-center items-center text-4xl text-gray-400 font-bold h-full w-1/2">
+          Nothing to show here!
+          <div className="bg-gray-200 flex justify-center items-center text-lg text-gray-400 font-bold">
+            Click on an online member to start talking.
+          </div>
+        </div>
+        <div className="bg-gray-100 p-2 pt-4 h-full w-1/4">
           <div
             style={{
               minHeight: "30rem",

@@ -26,7 +26,7 @@ const ChatBox = ({ id, profilePic, name, className }) => {
             setChats(res.data.chats);
           });
       }}
-      className={"bg-gray-100 " + className}
+      className={"bg-gray-300 " + className}
     >
       <div className="bg-white flex hover:cursor-pointer w-full h-10">
         <div className="flex items-center justify-center w-1/6 h-full">

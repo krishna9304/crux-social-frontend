@@ -45,7 +45,7 @@ const Message = ({ msgVal, me, profilePic }) => {
         fontSize={12}
         p={1}
         maxW="50%"
-        bg="#c4c4c4"
+        bg="#e5e5e5"
         color="black"
         borderRadius="10px 10px 10px 0"
         border="1px solid grey"

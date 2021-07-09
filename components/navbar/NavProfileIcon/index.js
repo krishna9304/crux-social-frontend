@@ -28,6 +28,7 @@ const NavProfileIcon = () => {
     dispatch(setSocket(null));
     dispatch(setCollege(""));
     router.push("/");
+    window.location.reload();
   };
   const [open, setOpen] = useState(false);
   return (
@@ -46,7 +47,7 @@ const NavProfileIcon = () => {
       <div
         className={`fixed ${
           open ? "" : "hidden"
-        } w-48 lg:w-1/6 md:w-1/4 sm:w-1/3 top-14 shadow-md rounded-lg right-2 my-2 border-r-2 py-2 px-1 bg-white`}
+        } w-48 lg:w-1/6 md:w-1/4 top-14 sm:w-1/3 shadow-md rounded-lg right-2 my-2 border-r-2 py-2 px-1 bg-white`}
       >
         <div className="mr-2">
           <div className="w-full px-2 text-sm font-light text-gray-400 ">
