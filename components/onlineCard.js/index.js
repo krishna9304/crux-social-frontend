@@ -5,6 +5,7 @@ import Message from "../message";
 import { useMediaQuery } from "../../utilities/mediaQuery";
 import ChatBox from "../chatBox";
 import { useRouter } from "next/router";
+import { useRef } from "react";
 
 const OnlineCard = ({ item, currItem, setCurrItem }) => {
   const [open, setOpen] = useState(false);
@@ -13,6 +14,19 @@ const OnlineCard = ({ item, currItem, setCurrItem }) => {
   let globalState = useSelector((state) => state);
   let isPageWide = useMediaQuery("(min-width: 900px)");
   let router = useRouter();
+  const messagesEndRef = useRef(null);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [chats]);
+
+  let id = item._id,
+    profilePic = item.profilepPic,
+    name = item.name;
 
   useEffect(() => {
     globalState.socket.on("NEW_MSG", (data) => {
@@ -23,6 +37,13 @@ const OnlineCard = ({ item, currItem, setCurrItem }) => {
     <>
       <div
         onClick={() => {
+          if (isPageWide && typeof setCurrItem !== "undefined") {
+            if (currItem === item) {
+              setCurrItem(null);
+            } else {
+              setCurrItem(item);
+            }
+          }
           open ? setOpen(false) : setOpen(true);
           axios
             .post(`${process.env.BACKEND_URL}/api/v1/chats/getChats`, {
@@ -93,6 +114,7 @@ const OnlineCard = ({ item, currItem, setCurrItem }) => {
                   />
                 );
               })}
+              <div ref={messagesEndRef} />
             </div>
             <div className="flex px-2 w-full h-10 mb-11">
               <input
@@ -147,21 +169,6 @@ const OnlineCard = ({ item, currItem, setCurrItem }) => {
           >
             <img className="w-full h-full invert " src="/x-mark-128.png" />
           </div>{" "}
-        </>
-      ) : null}
-      {open &&
-      isPageWide &&
-      (router.pathname === "/inbox" ||
-        router.pathname === "/online-members") ? (
-        <>
-          <div className="bg-white fixed w-1/2 h-11/12 top-14 bottom-0 left-1/4">
-            <ChatBox
-              className="h-full w-full"
-              id={id}
-              name={name}
-              profilePic={profilePic}
-            />
-          </div>
         </>
       ) : null}
     </>

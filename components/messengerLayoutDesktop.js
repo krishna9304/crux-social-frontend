@@ -7,6 +7,7 @@ import MessageCard from "./messagecard";
 import axios from "axios";
 import { useMediaQuery } from "../utilities/mediaQuery";
 import ChatBox from "../components/chatBox";
+import { useRouter } from "next/router";
 
 let MessengerLayoutDesktop = ({ classname = "" }) => {
   let isPageWide = useMediaQuery("(min-width: 900px)");
@@ -14,6 +15,7 @@ let MessengerLayoutDesktop = ({ classname = "" }) => {
   let [convos, setConvos] = useState([]);
   const [onlineUsers, setOnlineUsers] = useState([]);
   const [currItem, setCurrItem] = useState(null);
+  let router = useRouter();
 
   useEffect(() => {
     axios
@@ -75,10 +77,13 @@ let MessengerLayoutDesktop = ({ classname = "" }) => {
             })}
           </div>
         </div>
-        {currItem && isPageWide ? (
-          <div className="bg-white w-1/2 h-11/12">
+        {currItem &&
+        isPageWide &&
+        (router.pathname === "/inbox" ||
+          router.pathname === "/online-members") ? (
+          <div className="bg-white w-1/2 h-full">
             <ChatBox
-              className={"h-full w-full"}
+              className={"h-11/12 fixed top-14 w-1/2 bottom-0"}
               id={currItem._id}
               name={currItem.name}
               profilePic={currItem.profilepPic}

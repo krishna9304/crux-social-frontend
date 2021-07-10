@@ -45,14 +45,7 @@ const Inbox = () => {
                 Inbox
               </div>
               {convos.map((item, i) => {
-                return (
-                  <MessageCard
-                    id={item._id}
-                    name={item.name}
-                    profilePic={item.profilepPic}
-                    key={i}
-                  />
-                );
+                return <MessageCard key={i} item={item} />;
               })}
             </div>
           </div>

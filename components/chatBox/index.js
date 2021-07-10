@@ -1,4 +1,5 @@
 import axios from "axios";
+import { useRef } from "react";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import Message from "../message";
@@ -7,6 +8,16 @@ const ChatBox = ({ id, profilePic, name, className }) => {
   const [msg, setMsg] = useState("");
   let globalState = useSelector((state) => state);
   const [chats, setChats] = useState([]);
+  const messagesEndRef = useRef(null);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [chats]);
+
   useEffect(() => {
     globalState.socket.on("NEW_MSG", (data) => {
       setChats((msgs) => [...msgs, data]);
@@ -19,7 +30,6 @@ const ChatBox = ({ id, profilePic, name, className }) => {
       .then((res) => {
         setChats(res.data.chats);
       });
-    console.log("test");
   }, [id, name, profilePic]);
   return (
     <div className={"bg-gray-300 " + className}>
@@ -40,8 +50,8 @@ const ChatBox = ({ id, profilePic, name, className }) => {
         <div className="text-xs flex items-center font-light px-2">{name}</div>
       </div>
       <hr className="bg-black" />
-      <div className="flex flex-col w-full h-full">
-        <div className="w-full overflow-y-auto h-full pr-2">
+      <div className="flex flex-col justify-end w-full h-full">
+        <div className="w-full overflow-y-auto pr-2">
           {chats.map((item, key) => {
             return (
               <Message
@@ -52,6 +62,7 @@ const ChatBox = ({ id, profilePic, name, className }) => {
               />
             );
           })}
+          <div ref={messagesEndRef} />
         </div>
         <div className="flex px-2 w-full h-10 mb-11">
           <input

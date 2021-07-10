@@ -30,14 +30,7 @@ const OnlineMemebers = () => {
             <div className="w-full h-full flex flex-col">
               {onlineUsers.map((item, index) => {
                 if (item._id !== globalState.user._id) {
-                  return (
-                    <OnlineCard
-                      key={index}
-                      id={item._id}
-                      profilePic={item.profilepPic}
-                      name={item.name}
-                    />
-                  );
+                  return <OnlineCard key={index} item={item} />;
                 }
               })}
             </div>

@@ -4,12 +4,22 @@ import { useSelector } from "react-redux";
 import Message from "../message";
 import { useMediaQuery } from "../../utilities/mediaQuery";
 import ChatBox from "../chatBox";
+import { useRef } from "react";
 const ClassmateProfileModal = ({ classmate }) => {
   let isPageWide = useMediaQuery("(min-width: 1100px)");
   const [open, setOpen] = useState(false);
   const [msg, setMsg] = useState("");
   const [chats, setChats] = useState([]);
   let globalState = useSelector((state) => state);
+  const messagesEndRef = useRef(null);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [chats]);
 
   useEffect(() => {
     const ac = new AbortController();
@@ -155,6 +165,7 @@ const ClassmateProfileModal = ({ classmate }) => {
                   />
                 );
               })}
+              <div ref={messagesEndRef} />
             </div>
             <div className="flex px-2 w-full h-10 mb-11">
               <input
