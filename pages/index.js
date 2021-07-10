@@ -227,7 +227,7 @@ export default function Home() {
                           socket.emit("USER_ID", res.data.userdata._id);
                           axios
                             .post(
-                              `${process.env.BACKEND_URL}/api/v1/classmates/getClassmate`,
+                              `${process.env.BACKEND_URL}/api/v1/classmates/getClassmates`,
                               res.data.userdata
                             )
                             .then((classRes) => {
