@@ -5,11 +5,16 @@ import OnlineCard from "./onlineCard.js";
 import { useEffect, useState } from "react";
 import MessageCard from "./messagecard";
 import axios from "axios";
+import { useMediaQuery } from "../utilities/mediaQuery";
+import ChatBox from "../components/chatBox";
 
 let MessengerLayoutDesktop = ({ classname = "" }) => {
+  let isPageWide = useMediaQuery("(min-width: 900px)");
   let globalState = useSelector((state) => state);
   let [convos, setConvos] = useState([]);
   const [onlineUsers, setOnlineUsers] = useState([]);
+  const [currItem, setCurrItem] = useState(null);
+
   useEffect(() => {
     axios
       .post(`${process.env.BACKEND_URL}/api/v1/inbox/getInbox`, {
@@ -42,7 +47,7 @@ let MessengerLayoutDesktop = ({ classname = "" }) => {
   return (
     <div
       className={
-        "bg-gray-200 flex flex-col justify-start min-h-screen h-screen" +
+        "bg-gray-200 flex flex-col justify-start min-h-screen h-screen " +
         classname
       }
     >
@@ -61,21 +66,32 @@ let MessengerLayoutDesktop = ({ classname = "" }) => {
             {convos.map((item, i) => {
               return (
                 <MessageCard
-                  id={item._id}
-                  name={item.name}
-                  profilePic={item.profilepPic}
+                  setCurrItem={setCurrItem}
+                  currItem={currItem}
                   key={i}
+                  item={item}
                 />
               );
             })}
           </div>
         </div>
-        <div className="bg-gray-200 flex flex-col justify-center items-center text-4xl text-gray-400 font-bold h-full w-1/2">
-          Nothing to show here!
-          <div className="bg-gray-200 flex justify-center items-center text-lg text-gray-400 font-bold">
-            Click on an online member to start talking.
+        {currItem && isPageWide ? (
+          <div className="bg-white w-1/2 h-11/12">
+            <ChatBox
+              className={"h-full w-full"}
+              id={currItem._id}
+              name={currItem.name}
+              profilePic={currItem.profilepPic}
+            />
           </div>
-        </div>
+        ) : (
+          <div className="bg-gray-200 flex flex-col justify-center items-center text-4xl text-gray-400 font-bold h-full w-1/2">
+            Nothing to show here!
+            <div className="bg-gray-200 flex justify-center items-center text-lg text-gray-400 font-bold">
+              Click on an online member to start talking.
+            </div>
+          </div>
+        )}
         <div className="bg-gray-100 p-2 pt-4 h-full w-1/4">
           <div
             style={{
@@ -91,10 +107,10 @@ let MessengerLayoutDesktop = ({ classname = "" }) => {
               if (item._id !== globalState.user._id) {
                 return (
                   <OnlineCard
+                    setCurrItem={setCurrItem}
+                    currItem={currItem}
                     key={index}
-                    id={item._id}
-                    profilePic={item.profilepPic}
-                    name={item.name}
+                    item={item}
                   />
                 );
               }

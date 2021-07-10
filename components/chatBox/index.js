@@ -8,26 +8,21 @@ const ChatBox = ({ id, profilePic, name, className }) => {
   let globalState = useSelector((state) => state);
   const [chats, setChats] = useState([]);
   useEffect(() => {
-    const ac = new AbortController();
     globalState.socket.on("NEW_MSG", (data) => {
       setChats((msgs) => [...msgs, data]);
     });
-    return () => ac.abort();
-  }, []);
+    axios
+      .post(`${process.env.BACKEND_URL}/api/v1/chats/getChats`, {
+        to: id,
+        id: globalState.user._id,
+      })
+      .then((res) => {
+        setChats(res.data.chats);
+      });
+    console.log("test");
+  }, [id, name, profilePic]);
   return (
-    <div
-      onLoad={() => {
-        axios
-          .post(`${process.env.BACKEND_URL}/api/v1/chats/getChats`, {
-            to: id,
-            id: globalState.user._id,
-          })
-          .then((res) => {
-            setChats(res.data.chats);
-          });
-      }}
-      className={"bg-gray-300 " + className}
-    >
+    <div className={"bg-gray-300 " + className}>
       <div className="bg-white flex hover:cursor-pointer w-full h-10">
         <div className="flex items-center justify-center w-1/6 h-full">
           <img

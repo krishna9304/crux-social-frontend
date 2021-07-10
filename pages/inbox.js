@@ -35,7 +35,7 @@ const Inbox = () => {
   return (
     <div className="w-screen h-screen">
       {isPageWide ? (
-        <MessengerLayoutDesktop />
+        <MessengerLayoutDesktop classname="fixed top-0 left-0" />
       ) : (
         <MessengerLayoutMobile classname="h-screen">
           <div className="h-full flex items-center flex-col w-full">

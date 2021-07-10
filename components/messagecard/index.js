@@ -1,16 +1,24 @@
 import { useState } from "react";
-import { useRouter } from "next/router";
 import { useMediaQuery } from "../../utilities/mediaQuery";
 import ChatBox from "../chatBox";
-const MessageCard = ({ name, profilePic, id }) => {
+const MessageCard = ({ item, setCurrItem, currItem }) => {
   let isPageWide = useMediaQuery("(min-width: 900px)");
-  let router = useRouter();
   const [open, setOpen] = useState(false);
+  let id = item._id,
+    profilePic = item.profilepPic,
+    name = item.name;
   return (
     <>
       <div
         onClick={() => {
           setOpen(!open);
+          if (isPageWide) {
+            if (currItem === item) {
+              setCurrItem(null);
+            } else {
+              setCurrItem(item);
+            }
+          }
         }}
         className="w-full flex py-4 px-2 border-b hover:bg-gray-200 bg-white hover:cursor-pointer"
       >
@@ -21,19 +29,6 @@ const MessageCard = ({ name, profilePic, id }) => {
         </div>
         <div className="flex flex-grow text-sm items-center">{name}</div>
       </div>
-      {open &&
-      isPageWide &&
-      (router.pathname === "/inbox" ||
-        router.pathname === "/online-members") ? (
-        <div className="bg-white fixed w-1/2 h-11/12 top-14 bottom-0 left-1/4">
-          <ChatBox
-            className={"h-full w-full"}
-            id={id}
-            name={name}
-            profilePic={profilePic}
-          />
-        </div>
-      ) : null}
       {open && !isPageWide ? (
         <>
           <ChatBox

@@ -6,7 +6,7 @@ import { useMediaQuery } from "../../utilities/mediaQuery";
 import ChatBox from "../chatBox";
 import { useRouter } from "next/router";
 
-const OnlineCard = ({ profilePic, name, id }) => {
+const OnlineCard = ({ item, currItem, setCurrItem }) => {
   const [open, setOpen] = useState(false);
   const [msg, setMsg] = useState("");
   const [chats, setChats] = useState([]);
@@ -15,11 +15,9 @@ const OnlineCard = ({ profilePic, name, id }) => {
   let router = useRouter();
 
   useEffect(() => {
-    const ac = new AbortController();
     globalState.socket.on("NEW_MSG", (data) => {
       setChats((msgs) => [...msgs, data]);
     });
-    return () => ac.abort();
   }, []);
   return (
     <>
