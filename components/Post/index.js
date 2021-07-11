@@ -38,13 +38,12 @@ const Post = ({ item }) => {
     }
   }
   setInterval(() => {
-    setAgo(
-      timeDifference(
-        Number(item.timestamp),
-        Number(Date.now()) - 22 * 60 * 1000
-      )
-    );
-  }, 3000);
+    setAgo(timeDifference(Number(item.timestamp), Number(Date.now())));
+  }, 30000);
+
+  useEffect(() => {
+    setAgo(timeDifference(Number(item.timestamp), Number(Date.now())));
+  }, []);
 
   useEffect(() => {
     axios

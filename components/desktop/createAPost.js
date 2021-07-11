@@ -1,27 +1,25 @@
 import axios from "axios";
 import { useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { setTimeline } from "../../redux/actions/actions";
 
 const CreateAPost = () => {
   let globalState = useSelector((state) => state);
   let [err, setErr] = useState({});
+  const dispatch = useDispatch();
   const [post, setNewPost] = useState({
     picture: null,
     caption: null,
-    postedBy: null,
+    postedBy: globalState.user._id,
   });
   const [chosen, setChosen] = useState(false);
   let createNewPost = async () => {
-    setNewPost({
-      ...post,
-      postedBy: globalState.user._id,
-    });
     if (post.postedBy && (post.picture || post.caption)) {
       const formData = new FormData();
       formData.append("picture", post.picture);
       formData.append("caption", post.caption);
       formData.append("postedBy", globalState.user._id);
-      console.log(post.picture);
+      formData.append("timestamp", String(Date.now()));
       const config = {
         headers: {
           "content-type": "multipart/form-data",
@@ -32,20 +30,21 @@ const CreateAPost = () => {
         formData,
         config
       );
-      console.log(res);
-      if (res.data.res) {
-      } else {
+      if (!res.data.res) {
         setErr({
           show: true,
           msg: "",
         });
+      } else {
+        dispatch(setTimeline([res.data.post, ...globalState.timeline]));
+        console.log([res.data.post, ...globalState.timeline]);
       }
     } else {
       setErr({
         show: true,
         msg: "Please fill all the details and try again",
       });
-      console.log(err);
+      console.log(post);
     }
   };
   return (
