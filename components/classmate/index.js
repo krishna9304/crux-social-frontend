@@ -1,7 +1,9 @@
 import { useState } from "react";
+import { useSelector } from "react-redux";
 import ClassmateProfileModal from "./classmateProfileModal";
 const ClassmateProfile = ({ classmate }) => {
   const [isopen, setOpen] = useState(false);
+  let globalState = useSelector((state) => state);
   return (
     <>
       <div
@@ -22,6 +24,7 @@ const ClassmateProfile = ({ classmate }) => {
         </div>
         <div className="bg-black text-white flex items-center px-4 text-sm h-1/6 rounded-b-md w-full">
           {classmate.name}
+          {globalState.user._id === classmate._id ? " (You)" : ""}
         </div>
       </div>
       {isopen ? (

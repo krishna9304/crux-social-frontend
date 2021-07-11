@@ -4,4 +4,5 @@ export const ActionTypes = {
   CLASSMATES: "app/redux/actions/CLASSMATES",
   SET_COLLEGE: "app/redux/actions/SET_COLLEGE",
   SET_SOCKET: "app/redux/actions/SET_SOCKET",
+  TIMELINE: "app/redux/actions/TIMELINE",
 };

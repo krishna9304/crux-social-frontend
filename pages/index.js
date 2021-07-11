@@ -234,6 +234,19 @@ export default function Home() {
                               dispatch(setClassmates(classRes.data.classmates));
                             })
                             .catch((err) => console.log(err));
+                          axios
+                            .post(
+                              `${process.env.BACKEND_URL}/api/v1/post/gettimeline`,
+                              {
+                                id: globalState.user._id,
+                              }
+                            )
+                            .then((res) => {
+                              if (res.data.res) {
+                                dispatch(setTimeline(res.data.timeline));
+                              }
+                            })
+                            .catch(console.error);
                           console.log(res.data.msg);
                         } else {
                           console.log(res.data.msg);

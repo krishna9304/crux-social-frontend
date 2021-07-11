@@ -20,3 +20,7 @@ export const setSocket = (socket) => ({
   type: ActionTypes.SET_SOCKET,
   payload: socket,
 });
+export const setTimeline = (timeline) => ({
+  type: ActionTypes.TIMELINE,
+  payload: timeline,
+});

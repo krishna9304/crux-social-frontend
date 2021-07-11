@@ -1,8 +1,24 @@
 import Post from "../Post";
 import CreateAPost from "../desktop/createAPost";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+import axios from "axios";
+import { setTimeline } from "../../redux/actions/actions";
 const MobileLayout = () => {
   let globalState = useSelector((state) => state);
+  let dispatch = useDispatch();
+  useEffect(() => {
+    axios
+      .post(`${process.env.BACKEND_URL}/api/v1/post/gettimeline`, {
+        id: globalState.user._id,
+      })
+      .then((res) => {
+        if (res.data.res) {
+          dispatch(setTimeline(res.data.timeline));
+        }
+      })
+      .catch(console.error);
+  }, []);
   return (
     <div className="py-4 flex flex-col items-center justify-center h-full w-screen overflow-y-auto">
       <div className="w-full h-full flex items-center justify-center">
@@ -57,10 +73,9 @@ const MobileLayout = () => {
         <CreateAPost />
         <hr className="bg-black w-full my-4 mb-2 border-t border-gray-300 " />
         <div className="font-light text-center mb-2">Latest Posts</div>
-        <Post />
-        <Post />
-        <Post />
-        <Post />
+        {globalState.timeline.map((item, i) => {
+          return <Post item={item} key={i} />;
+        })}
       </div>
     </div>
   );

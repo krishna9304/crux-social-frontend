@@ -2,11 +2,24 @@ import CreateAPost from "./createAPost";
 import Post from "../Post";
 import OnlineCard from "../onlineCard.js";
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import axios from "axios";
+import { setTimeline } from "../../redux/actions/actions";
 const DesktopLayout = () => {
   let globalState = useSelector((state) => state);
   const [onlineUsers, setOnlineUsers] = useState([]);
+  let dispatch = useDispatch();
   useEffect(() => {
+    axios
+      .post(`${process.env.BACKEND_URL}/api/v1/post/gettimeline`, {
+        id: globalState.user._id,
+      })
+      .then((res) => {
+        if (res.data.res) {
+          dispatch(setTimeline(res.data.timeline));
+        }
+      })
+      .catch(console.error);
     if (globalState.socket) {
       globalState.socket.emit("GET_ONLINE_USERS", globalState.user._id);
       globalState.socket.on("ONLINE_USERS", (user) => {
@@ -66,7 +79,9 @@ const DesktopLayout = () => {
       <div className="overflow-y-scroll py-4 pb-0 px-16 w-1/2 h-full">
         <CreateAPost />
         <hr className="bg-black w-full my-6 border-t border-gray-300 " />
-        <Post />
+        {globalState.timeline.map((item, i) => {
+          return <Post item={item} key={i} />;
+        })}
       </div>
       <div className="w-1/4 border-l border-gray-300 p-4 h-full">
         <div

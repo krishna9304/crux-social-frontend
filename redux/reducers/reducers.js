@@ -5,10 +5,13 @@ let default_state = {
   user: null,
   classmates: [],
   socket: null,
+  timeline: [],
 };
 
 let reducerFunction = (state = default_state, action) => {
   switch (action.type) {
+    case ActionTypes.TIMELINE:
+      return { ...state, timeline: action.payload };
     case ActionTypes.AUTH:
       return { ...state, auth: action.payload };
     case ActionTypes.SET_SOCKET:
