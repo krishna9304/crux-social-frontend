@@ -9,7 +9,7 @@ const CreateAPost = () => {
   const dispatch = useDispatch();
   const [post, setNewPost] = useState({
     picture: null,
-    caption: null,
+    caption: "",
     postedBy: globalState.user._id,
   });
   const [chosen, setChosen] = useState(false);
@@ -37,14 +37,18 @@ const CreateAPost = () => {
         });
       } else {
         dispatch(setTimeline([res.data.post, ...globalState.timeline]));
-        console.log([res.data.post, ...globalState.timeline]);
+        setNewPost({
+          picture: null,
+          caption: "",
+          postedBy: globalState.user._id,
+        });
+        setChosen(false);
       }
     } else {
       setErr({
         show: true,
         msg: "Please fill all the details and try again",
       });
-      console.log(post);
     }
   };
   return (
@@ -66,6 +70,7 @@ const CreateAPost = () => {
       </div>
       <div className="w-11/12 pl-4 xl:px-0 lg:px-0 md:px-0">
         <textarea
+          value={post.caption}
           onChange={(e) => {
             setNewPost({
               ...post,
@@ -108,7 +113,6 @@ const CreateAPost = () => {
                   ...post,
                   picture: e.target.files[0],
                 });
-                console.log(post);
               }}
               name="image"
               type="file"

@@ -1,17 +1,20 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import Comment from "../comment";
 
 const Post = ({ item }) => {
   const [isCommenting, setIsCommenting] = useState(false);
-  const [comments, setComments] = useState(item.comment);
+  const [comments, setComments] = useState([]);
   const [comment, setComment] = useState("");
   const [lastComments, setLastComments] = useState([]);
   const [ago, setAgo] = useState("");
+  const userId = useSelector((state) => state.user._id);
   const [postedBy, setPostedBy] = useState({
     profilePic: "",
     name: "",
   });
+  const [isLiked, setIsLiked] = useState(item.likes.includes(String(userId)));
   function timeDifference(previous, current = Number(Date.now())) {
     var msPerMinute = 60 * 1000;
     var msPerHour = msPerMinute * 60;
@@ -37,11 +40,23 @@ const Post = ({ item }) => {
       return "approximately " + Math.round(elapsed / msPerYear) + " years ago";
     }
   }
+
   setInterval(() => {
     setAgo(timeDifference(Number(item.timestamp), Number(Date.now())));
   }, 30000);
 
   useEffect(() => {
+    axios
+      .post(`${process.env.BACKEND_URL}/api/v1/post/getcomments`, {
+        ids: item.comment,
+      })
+      .then((res) => {
+        if (res.data.res) {
+          setComments(res.data.comments);
+        }
+        // console.log(res.data.comments);
+      })
+      .catch(console.error);
     setAgo(timeDifference(Number(item.timestamp), Number(Date.now())));
   }, []);
 
@@ -112,8 +127,24 @@ const Post = ({ item }) => {
       <div className="flex flex-col h-auto rounded-b-lg w-full bg-white">
         <div className="text-xs p-2 bg-gray-100">{item.caption}</div>
         <div className="flex h-10 bg-white w-full">
-          <div className="w-1/3 h-10 flex hover:cursor-pointer hover:bg-gray-100 justify-center items-center text-sm font-light">
-            👍🏼 Like
+          <div
+            onClick={() => {
+              axios
+                .post(`${process.env.BACKEND_URL}/api/v1/post/like`, {
+                  postId: item._id,
+                  userId: userId,
+                })
+                .then((res) => {
+                  if (res.data.res) {
+                    console.log(res.data);
+                    setIsLiked((liked) => !liked);
+                  }
+                });
+            }}
+            className="w-1/3 h-10 flex hover:cursor-pointer hover:bg-gray-100 justify-center items-center text-sm font-light"
+          >
+            <img className="w-6 mx-2" src="/like.png" />{" "}
+            {isLiked ? "Liked" : "Like"}
           </div>
           <div
             onClick={() => {
@@ -164,7 +195,22 @@ const Post = ({ item }) => {
             }}
             onKeyUp={(e) => {
               if (e.key === "Enter") {
-                setComments((data) => [...data, comment]);
+                console.log(
+                  `${process.env.BACKEND_URL}/api/v1/post/addcomment`
+                );
+                axios
+                  .post(`${process.env.BACKEND_URL}/api/v1/post/addcomment`, {
+                    comment,
+                    commentedBy: userId,
+                    postId: item._id,
+                  })
+                  .then((res) => {
+                    console.log(res.data);
+                  });
+                setComments((data) => [
+                  ...data,
+                  { commentedBy: userId, comment },
+                ]);
                 setComment("");
               }
             }}
