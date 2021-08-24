@@ -61,6 +61,14 @@ const Post = ({ item }) => {
   }, []);
 
   useEffect(() => {
+    if (comments.length > 4) {
+      setLastComments(comments.slice(-4, comments.length));
+    } else {
+      setLastComments(comments);
+    }
+  }, [comments]);
+
+  useEffect(() => {
     axios
       .post(`${process.env.BACKEND_URL}/api/v1/student/getStudent`, {
         studentID: item.postedBy,
@@ -72,13 +80,9 @@ const Post = ({ item }) => {
             name: res.data.student.name,
           });
         }
-      });
-    if (comments.length > 4) {
-      setLastComments(comments.slice(-4, comments.length));
-    } else {
-      setLastComments(comments);
-    }
-  }, [comments]);
+      })
+      .catch(console.error);
+  }, []);
 
   return (
     <div className="bg-gray-100 mb-8 w-auto rounded-lg h-auto">
@@ -141,7 +145,9 @@ const Post = ({ item }) => {
                   }
                 });
             }}
-            className="w-1/3 h-10 flex hover:cursor-pointer hover:bg-gray-100 justify-center items-center text-sm font-light"
+            className={`w-1/3 h-10 flex hover:cursor-pointer hover:bg-gray-100 justify-center items-center text-sm font-light ${
+              isLiked ? "font-bold" : ""
+            }`}
           >
             <img className="w-6 mx-2" src="/like.png" />{" "}
             {isLiked ? "Liked" : "Like"}

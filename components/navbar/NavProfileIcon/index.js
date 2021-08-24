@@ -54,7 +54,12 @@ const NavProfileIcon = () => {
             Dashboard
           </div>
           <hr className="w-full h-0.1 m-1 bg-gray-100" />
-          <div className="w-full hover:cursor-pointer hover:font-bold hover:text-gray-900 px-4 py-2 text-xs font-light">
+          <div
+            onClick={() => {
+              router.push("/edit-profile");
+            }}
+            className="w-full hover:cursor-pointer hover:font-bold hover:text-gray-900 px-4 py-2 text-xs font-light"
+          >
             Edit Profile
           </div>
           <div

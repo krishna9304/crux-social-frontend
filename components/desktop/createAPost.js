@@ -1,9 +1,9 @@
 import axios from "axios";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setTimeline } from "../../redux/actions/actions";
+// import { setTimeline } from "../../redux/actions/actions";
 
-const CreateAPost = () => {
+const CreateAPost = ({ timeline, setTimeline }) => {
   let globalState = useSelector((state) => state);
   let [err, setErr] = useState({});
   const dispatch = useDispatch();
@@ -36,7 +36,7 @@ const CreateAPost = () => {
           msg: "",
         });
       } else {
-        dispatch(setTimeline([res.data.post, ...globalState.timeline]));
+        await setTimeline([res.data.post, ...timeline]);
         setNewPost({
           picture: null,
           caption: "",

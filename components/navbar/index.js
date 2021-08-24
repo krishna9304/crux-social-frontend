@@ -1,9 +1,11 @@
+import { useRouter } from "next/router";
 import { useState } from "react";
 import CollegeLogo from "./CollegeLogo";
 import NavProfileIcon from "./NavProfileIcon";
 
 const NavBar = ({ className }) => {
   let [open, setOpen] = useState(false);
+  let router = useRouter();
   return (
     <nav
       className={
@@ -40,7 +42,12 @@ const NavBar = ({ className }) => {
             <div className="pr-6">
               <img className="w-6" src="/bell-3-128.png"></img>
             </div>
-            <div className="pr-6">
+            <div
+              onClick={() => {
+                router.push("/inbox");
+              }}
+              className="pr-6 cursor-pointer"
+            >
               <img className="w-6" src="/chat-4-256.png"></img>
             </div>
           </div>

@@ -5,6 +5,7 @@ import Message from "../message";
 import { useMediaQuery } from "../../utilities/mediaQuery";
 import ChatBox from "../chatBox";
 import { useRef } from "react";
+import { useRouter } from "next/router";
 const ClassmateProfileModal = ({ classmate }) => {
   let isPageWide = useMediaQuery("(min-width: 1100px)");
   const [open, setOpen] = useState(false);
@@ -12,7 +13,7 @@ const ClassmateProfileModal = ({ classmate }) => {
   const [chats, setChats] = useState([]);
   let globalState = useSelector((state) => state);
   const messagesEndRef = useRef(null);
-
+  let router = useRouter();
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
@@ -117,7 +118,12 @@ const ClassmateProfileModal = ({ classmate }) => {
                     />
                     Add Friend
                   </div>
-                  <div className="hover:cursor-pointer hover:bg-gray-100 text-xs pt-1 flex flex-col justify-center items-center h-full w-1/3 rounded-2xl border">
+                  <div
+                    onClick={() => {
+                      router.push(`/view-profile/${classmate._id}`);
+                    }}
+                    className="hover:cursor-pointer hover:bg-gray-100 text-xs pt-1 flex flex-col justify-center items-center h-full w-1/3 rounded-2xl border"
+                  >
                     <img className="w-10 mb-1 h-10" src="/icons8-view-90.png" />
                     See Posts
                   </div>
